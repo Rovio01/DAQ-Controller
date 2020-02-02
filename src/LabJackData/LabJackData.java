@@ -23,7 +23,7 @@ public class LabJackData extends Application {
         primaryStage.show();
 
         Controller controller = loader.getController();
-        controller.setConnectionStatus(false);
+        controller.setConnectionStatus(true);
     }
 
     @Override
