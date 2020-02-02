@@ -42,26 +42,10 @@ public class Controller {
     }
 
     public void ignitionButtonPress(ActionEvent event) {
-        // Alert dialog to prompt for user confirmation on the ignition.
-        Alert alert = new Alert(Alert.AlertType.NONE);
-        alert.setContentText("Are you sure you'd like to start the ignition?");
-        alert.setTitle("Start Ignition?");
-
-        // Add buttons to the alert dialog.
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        ButtonType confirmButton = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
-        alert.getDialogPane().getButtonTypes().add(cancelButton);
-        alert.getDialogPane().getButtonTypes().add(confirmButton);
-
         // Fetch the result of the users input and react appropriately
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == confirmButton) {
-            disarmButton.setDisable(true);
-            updateLog("Igniting");
-            ignitionButton.setDisable(true);
-        } else {
-            updateLog("Ignition canceled");
-        }
+        disarmButton.setDisable(true);
+        updateLog("Igniting");
+        ignitionButton.setDisable(true);
     }
 
     public void hideLog(ActionEvent event) {
