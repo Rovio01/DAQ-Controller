@@ -1,14 +1,15 @@
 package LabJackData;
 
+import com.sun.jna.ptr.IntByReference;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import java.util.Optional;
+import com.labjack.LJM;
+import com.labjack.LJMException;
 
 public class Controller {
-
     @FXML
     private Pane mainPane;
     @FXML
@@ -18,6 +19,7 @@ public class Controller {
     @FXML
     private TextArea logTextArea;
 
+
     public void armButtonPress(ActionEvent event) {
         if (getConnectionStatus()) {
             updateLog("Arming...");
@@ -26,7 +28,7 @@ public class Controller {
             ignitionButton.setDisable(false);
             armStatus.setText("Armed");
             armStatus.setTextFill(Color.web("#00FF00"));
-
+            LJM.openS("ANY", "ANY", "ANY", new IntByReference(0));
         } else {
             updateLog("No connection detected, check the connection then try again.");
         }
@@ -80,8 +82,8 @@ public class Controller {
         }
     }
 
-
     public boolean getConnectionStatus() {
         return(connectionStatus.getText().equalsIgnoreCase("Connected"));
     }
+
 }

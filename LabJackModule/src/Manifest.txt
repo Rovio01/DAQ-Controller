@@ -1,0 +1,7 @@
+Name: com/labjack/
+Specification-Title: LJM Java
+Specification-Version: 1.16
+Specification-Vendor: LabJack Corporation
+Implementation-Title: com.labjack
+Implementation-Version: 1.16
+Implementation-Vendor: LabJack Corporation
