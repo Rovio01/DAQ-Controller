@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class LabJackData extends Application {
+    static int handle = 0;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Initializing...");
@@ -38,6 +40,7 @@ public class LabJackData extends Application {
     public boolean initializeDAQ() {
         IntByReference handleRef = new IntByReference(0);
         int status = LJM.openS("ANY", "ANY", "ANY", handleRef);
+        handle = handleRef.getValue();
 
         return status == 0;
     }

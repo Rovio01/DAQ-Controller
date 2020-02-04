@@ -3,9 +3,15 @@ package LabJackData;
 import com.sun.jna.ptr.IntByReference;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.time.LocalTime;
 import com.labjack.LJM;
 import com.labjack.LJMException;
 
@@ -18,6 +24,10 @@ public class Controller {
     private Label connectionStatus, armStatus, logLabel;
     @FXML
     private TextArea logTextArea;
+    @FXML
+    private LineChart<String, Double> dataGraph;
+    private XYChart.Series<String, Double> series = new XYChart.Series<>();
+    private ScheduledExecutorService scheduledExecutorService;
 
 
     public void armButtonPress(ActionEvent event) {
@@ -29,6 +39,8 @@ public class Controller {
             armStatus.setText("Armed");
             armStatus.setTextFill(Color.web("#00FF00"));
             LJM.openS("ANY", "ANY", "ANY", new IntByReference(0));
+            setupGraph();
+            addToGraph();
         } else {
             updateLog("No connection detected, check the connection then try again.");
         }
@@ -86,4 +98,20 @@ public class Controller {
         return(connectionStatus.getText().equalsIgnoreCase("Connected"));
     }
 
+    public void setupStreamOut() {
+    }
+
+    public double addData() {
+    }
+
+    public void setupGraph() {
+        dataGraph.setTitle("Chart Test");
+        series.setName("Data");
+        dataGraph.setCreateSymbols(false);
+        dataGraph.setLegendVisible(false); }
+
+    public void addToGraph() {
+
+        dataGraph.getData().add(series);
+    }
 }
