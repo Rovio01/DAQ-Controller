@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.time.LocalTime;
+import java.util.concurrent.TimeUnit;
+
 import com.labjack.LJM;
 import com.labjack.LJMException;
 
@@ -40,7 +42,6 @@ public class Controller {
             armStatus.setTextFill(Color.web("#00FF00"));
             LJM.openS("ANY", "ANY", "ANY", new IntByReference(0));
             setupGraph();
-            addToGraph();
         } else {
             updateLog("No connection detected, check the connection then try again.");
         }
@@ -60,6 +61,8 @@ public class Controller {
         disarmButton.setDisable(true);
         updateLog("Igniting");
         ignitionButton.setDisable(true);
+        // addData();
+        // Need to feed in stream data.
     }
 
     public void hideLog(ActionEvent event) {
@@ -101,17 +104,27 @@ public class Controller {
     public void setupStreamOut() {
     }
 
-    public double addData() {
+    public void addData(double data) {
+        final Runnable dataRunner = new Runnable() {
+            @Override
+            public void run() {
+                addDataHelper(LocalTime.now().toString(), data);
+            }
+        };
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(dataRunner, 0, 500, TimeUnit.MILLISECONDS);
+    }
+
+    // Helper class to add data to the graph
+    public void addDataHelper(String time, double data) {
+        series.getData().add(new XYChart.Data<>(time, data));
     }
 
     public void setupGraph() {
         dataGraph.setTitle("Chart Test");
         series.setName("Data");
         dataGraph.setCreateSymbols(false);
-        dataGraph.setLegendVisible(false); }
-
-    public void addToGraph() {
-
+        dataGraph.setLegendVisible(false);
         dataGraph.getData().add(series);
     }
 }
