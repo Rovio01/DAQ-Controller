@@ -1,24 +1,50 @@
 package LabJackData;
 
-import com.sun.jna.ptr.IntByReference;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import com.labjack.LJM;
-import com.labjack.LJMException;
 
 public class Controller {
     @FXML
     private Pane mainPane;
     @FXML
-    private Button armButton, disarmButton, ignitionButton, hideLogButton;
+    private Button armButton, disarmButton, ignitionButton, hideLogButton, startStreamButton, stopStreamButton;
     @FXML
     private Label connectionStatus, armStatus, logLabel;
     @FXML
     private TextArea logTextArea;
 
+    private LabJackData app;
+
+    void addApplication(LabJackData app) {
+        this.app = app;
+    }
+
+    public void startStreamButtonPress(ActionEvent event) {
+        if (getConnectionStatus()) {
+            updateLog("Starting Stream...");
+            startStreamButton.setDisable(true);
+            stopStreamButton.setDisable(false);
+            app.startStream();
+        } else {
+            updateLog("No connection detected, check the connection then try again.");
+        }
+    }
+
+    public void stopStreamButtonPress(ActionEvent event) {
+        if (getConnectionStatus()) {
+            updateLog("Stopping Stream...");
+            startStreamButton.setDisable(false);
+            stopStreamButton.setDisable(true);
+            app.stopStream();
+        } else {
+            updateLog("No connection detected, check the connection then try again.");
+        }
+    }
 
     public void armButtonPress(ActionEvent event) {
         if (getConnectionStatus()) {
@@ -28,7 +54,6 @@ public class Controller {
             ignitionButton.setDisable(false);
             armStatus.setText("Armed");
             armStatus.setTextFill(Color.web("#00FF00"));
-            LJM.openS("ANY", "ANY", "ANY", new IntByReference(0));
         } else {
             updateLog("No connection detected, check the connection then try again.");
         }
@@ -48,6 +73,7 @@ public class Controller {
         disarmButton.setDisable(true);
         updateLog("Igniting");
         ignitionButton.setDisable(true);
+        app.ignite();
     }
 
     public void hideLog(ActionEvent event) {
@@ -61,18 +87,18 @@ public class Controller {
         }
     }
 
-    public void showLog() {
+    private void showLog() {
         hideLogButton.setText("Hide Log");
         mainPane.setPrefHeight(750.0);
         logTextArea.setVisible(true);
         logLabel.setVisible(true);
     }
 
-    public void updateLog(String logItem) {
+    private void updateLog(String logItem) {
         logTextArea.appendText(java.time.LocalTime.now() + ": " + logItem + "\n");
     }
 
-    public void setConnectionStatus(Boolean isConnected) {
+    void setConnectionStatus(Boolean isConnected) {
         if (isConnected) {
             connectionStatus.setText("Connected");
             connectionStatus.setTextFill(Color.web("#00ff00"));
@@ -82,7 +108,7 @@ public class Controller {
         }
     }
 
-    public boolean getConnectionStatus() {
+    private boolean getConnectionStatus() {
         return(connectionStatus.getText().equalsIgnoreCase("Connected"));
     }
 

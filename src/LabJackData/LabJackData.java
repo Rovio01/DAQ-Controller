@@ -1,7 +1,6 @@
 package LabJackData;
 
 import com.labjack.LJM;
-import com.labjack.LJMException;
 import com.sun.jna.ptr.IntByReference;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +8,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class LabJackData extends Application {
+    private int handle = 0;
+    private StreamTask streamer;
+    private IgniterTask igniter;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         System.out.println("Initializing...");
@@ -24,21 +27,41 @@ public class LabJackData extends Application {
             controller.setConnectionStatus(false);
         }
 
+        controller.addApplication(this);
+
         System.out.println("Initialized successfully");
         primaryStage.setTitle("Data Acquisition Device Monitor");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        streamer = new StreamTask(handle);
+        igniter = new IgniterTask(handle);
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         System.out.println("Shutting down...");
+        streamer.stopStream();
     }
 
-    public boolean initializeDAQ() {
+    private boolean initializeDAQ() {
         IntByReference handleRef = new IntByReference(0);
         int status = LJM.openS("ANY", "ANY", "ANY", handleRef);
-
+        handle = handleRef.getValue();
+        System.out.println("handle: "+handle);
+        System.out.println("status: "+status);
         return status == 0;
+    }
+
+    void startStream() {
+        new Thread(streamer).start();
+    }
+
+    void stopStream() {
+        streamer.stopStream();
+    }
+
+    void ignite() {
+        new Thread(igniter).start();
     }
 }
