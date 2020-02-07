@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class LabJackData extends Application {
-    private int handle = 0;
+    private int handle;
     private StreamTask streamer;
     private IgniterTask igniter;
+    boolean streaming = false;
+    Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -18,11 +20,12 @@ public class LabJackData extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("view.fxml"));
         Scene scene = new Scene(loader.load());
-        Controller controller = loader.getController();
+        controller = loader.getController();
 
         // Check if there was no error connection
         if (initializeDAQ()) {
             controller.setConnectionStatus(true);
+            LJM.eWriteAddress(handle,2015,0,0);
         } else {
             controller.setConnectionStatus(false);
         }
@@ -33,15 +36,12 @@ public class LabJackData extends Application {
         primaryStage.setTitle("Data Acquisition Device Monitor");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        streamer = new StreamTask(handle);
-        igniter = new IgniterTask(handle);
     }
 
     @Override
     public void stop() {
         System.out.println("Shutting down...");
-        streamer.stopStream();
+        stopStream();
     }
 
     private boolean initializeDAQ() {
@@ -54,14 +54,18 @@ public class LabJackData extends Application {
     }
 
     void startStream() {
+        streamer = new StreamTask(handle, controller);
         new Thread(streamer).start();
+        streaming = true;
     }
 
     void stopStream() {
         streamer.stopStream();
+        streaming = false;
     }
 
     void ignite() {
+        igniter = new IgniterTask(handle, controller);
         new Thread(igniter).start();
     }
 }

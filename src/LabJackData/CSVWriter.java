@@ -16,7 +16,7 @@ class CSVWriter {
     List<String[]> dataLines;
 
     CSVWriter() throws Exception{
-        fileName = new SimpleDateFormat("yyyyMMddHHmmss'.csv'").format(new Date());
+        fileName = new SimpleDateFormat("'data/'yyyyMMddHHmmss'.csv'").format(new Date());
         dataLines = new ArrayList<>();
         dataLines.add(new String[]
                 { "Time", "Load", "Pressure 1", "Pressure 2" });
