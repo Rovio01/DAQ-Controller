@@ -50,7 +50,7 @@ public class StreamTask extends Task<Void> {
 	}
 
 	private void configureFile() throws Exception {
-		writer = new CSVWriter();
+		writer = new CSVWriter(controller);
 	}
 
 	private void configureStream() {
@@ -83,6 +83,7 @@ public class StreamTask extends Task<Void> {
 				IntByReference errAddressRef = new IntByReference(-1);
 				LJM.eWriteNames(handle, aNames.length, aNames, aValues,
 						errAddressRef);
+				controller.currentData=new ArrayList<>();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -102,14 +103,13 @@ public class StreamTask extends Task<Void> {
 		IntByReference deviceScanBacklogRef = new IntByReference(0);
 		IntByReference ljmScanBacklogRef = new IntByReference(0);
 		long stTime = System.currentTimeMillis();
+		controller.streamStartTime = stTime;
 		int iteration = 0;
 		while (stream) {
 			LJM.eStreamRead(handle, aData, deviceScanBacklogRef,
 					ljmScanBacklogRef);
-			System.out.println(aData.length);
 			writer.dataLines.clear();
 			ArrayList<double[]> dataPacket = new ArrayList<>();
-			System.out.println("Checkpoint 1");
 			for (int line = 0; line < aData.length / numAddresses; line++) {
 				ArrayList<String> dataLine = new ArrayList<>();
 				double[] dataSlice = new double[numAddresses + 1];
@@ -117,15 +117,22 @@ public class StreamTask extends Task<Void> {
 				dataLine.add("" + currentTime);
 				dataSlice[0] = currentTime;
 				for (int item = 0; item < numAddresses; item++) {
-					dataLine.add("" + aData[line * numAddresses + item]);
-					dataSlice[item + 1] = aData[line * numAddresses + item];
+					double vIn=aData[line * numAddresses + item];
+					double converted=0;
+					switch (item) {
+						case 0: converted = (vIn-0)*1; break;
+						case 1: converted = (vIn-0)*1; break;
+						case 2: converted = (vIn-0)*1; break;
+					}
+					dataLine.add("" + converted);
+					dataSlice[item + 1] = converted;
 				}
 				dataPacket.add(dataSlice);
-				String[] arrayThing = new String[numAddresses];
+				String[] arrayThing = new String[dataLine.size()];
 				dataLine.toArray(arrayThing);
 				writer.dataLines.add(arrayThing);
+				iteration++;
 			}
-			System.out.println(Arrays.toString(writer.dataLines.get(1)));
 			writer.writeLine();
 			if (deviceScanBacklogRef.getValue() > 5000) {
 				updateLog("Device scan backlog is growing unexpectedly fast, backlog is " + deviceScanBacklogRef.getValue());
@@ -133,9 +140,7 @@ public class StreamTask extends Task<Void> {
 			if (ljmScanBacklogRef.getValue() > 5000) {
 				updateLog("LJM scan backlog is growing unexpectedly fast, backlog is " + ljmScanBacklogRef.getValue());
 			}
-			System.out.println("Checkpoint 2");
 			Platform.runLater(() -> controller.updateGraph(dataPacket, numAddresses));
-			System.out.println("Finished stream loop");
 		}
 		LJM.eStreamStop(handle);
 		updateLog("Stream stopped");

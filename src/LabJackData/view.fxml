@@ -1,78 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="LabJackData.Controller">
-    <columnConstraints>
-        <ColumnConstraints/>
-    </columnConstraints>
-    <rowConstraints>
-        <RowConstraints/>
-        <RowConstraints/>
-    </rowConstraints>
-    <Pane fx:id="mainPane" prefHeight="750.0" prefWidth="1200.0" GridPane.rowIndex="1">
-        <Button fx:id="armButton" layoutX="33.0" layoutY="387.0" mnemonicParsing="false" onAction="#armButtonPress"
-                prefHeight="59.0" prefWidth="163.0" text="Arm">
-            <font>
-                <Font size="15.0"/>
-            </font>
-        </Button>
-        <Button fx:id="disarmButton" disable="true" layoutX="206.0" layoutY="387.0" mnemonicParsing="false"
-                onAction="#disarmButtonPress" prefHeight="59.0" prefWidth="163.0" text="Disarm">
-            <font>
-                <Font size="15.0"/>
-            </font>
-        </Button>
-        <Button fx:id="ignitionButton" disable="true" layoutX="379.0" layoutY="387.0" mnemonicParsing="false"
-                onAction="#ignitionButtonPress" prefHeight="59.0" prefWidth="163.0" text="Ignition">
-            <font>
-                <Font size="15.0"/>
-            </font>
-        </Button>
-        <Button fx:id="startStreamButton" layoutX="800.0" layoutY="387.0" mnemonicParsing="false"
-                onAction="#startStreamButtonPress" prefHeight="59.0" prefWidth="163.0" text="Start Stream">
-            <font>
-                <Font size="15.0"/>
-            </font>
-        </Button>
-        <Button fx:id="stopStreamButton" disable="true" layoutX="980.0" layoutY="387.0" mnemonicParsing="false"
-                onAction="#stopStreamButtonPress" prefHeight="59.0" prefWidth="163.0" text="Stop Stream">
-            <font>
-                <Font size="15.0"/>
-            </font>
-        </Button>
-        <Label layoutX="560.0" layoutY="429.0" prefHeight="17.0" prefWidth="110.0" text="Connection Status:">
-            <font>
-                <Font name="System Bold" size="12.0"/>
-            </font>
-        </Label>
-        <Label fx:id="connectionStatus" layoutX="674.0" layoutY="429.0" text="Disconnected" textFill="RED"/>
-        <TextArea fx:id="logTextArea" editable="false" layoutX="33.0" layoutY="520.0" prefHeight="211.0"
-                  prefWidth="939.0" wrapText="true"/>
-        <Label fx:id="logLabel" layoutX="33.0" layoutY="497.0" text="Output log">
-            <font>
-                <Font name="System Bold" size="12.0"/>
-            </font>
-        </Label>
-        <Label layoutX="560.0" layoutY="406.0" prefHeight="17.0" prefWidth="72.0" text="Arm Status:">
-            <font>
-                <Font name="System Bold" size="12.0"/>
-            </font>
-        </Label>
-        <Label fx:id="armStatus" layoutX="632.0" layoutY="406.0" text="Disarmed" textFill="RED"/>
-        <Button fx:id="hideLogButton" layoutX="32.0" layoutY="469.0" mnemonicParsing="false" onAction="#hideLog"
-                text="Hide Log"/>
-        <AreaChart fx:id="areaChart" layoutX="33.0" layoutY="33.0" prefHeight="348.0" prefWidth="939.0">
-            <xAxis>
-                <CategoryAxis label="Time" side="BOTTOM"/>
-            </xAxis>
-            <yAxis>
-                <NumberAxis side="LEFT"/>
-            </yAxis>
-        </AreaChart>
-    </Pane>
-</GridPane>
+<VBox spacing="10.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LabJackData.Controller">
+   <children>
+      <HBox spacing="5.0">
+         <children>
+              <LineChart fx:id="lineChart" animated="false" createSymbols="false" maxHeight="800.0" prefHeight="400.0" prefWidth="890.0">
+                  <xAxis>
+                      <NumberAxis forceZeroInRange="false" label="Time (s)" side="BOTTOM" />
+                  </xAxis>
+                  <yAxis>
+                      <NumberAxis label="Force (kgf), Pressure (psi)" maxHeight="1.7976931348623157E308" side="LEFT" />
+                  </yAxis>
+              </LineChart>
+            <VBox alignment="CENTER_LEFT" prefWidth="55.0">
+               <children>
+                  <Label text="Load Cell:" />
+                  <Label text="PT 1:" />
+                  <Label text="PT 2:" />
+               </children></VBox>
+            <VBox alignment="CENTER" prefWidth="80.0">
+               <children>
+                  <Label fx:id="loadCellData" text="0 lbf" />
+                  <Label fx:id="pt1Data" text="0 psi" />
+                  <Label fx:id="pt2Data" text="0 psi" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox spacing="10.0">
+         <children>
+              <Button fx:id="startStreamButton" mnemonicParsing="false" onAction="#startStreamButtonPress" prefHeight="60.0" prefWidth="160.0" text="Start Recording">
+                  <font>
+                      <Font size="15.0" />
+                  </font>
+              </Button>
+              <Button fx:id="stopStreamButton" disable="true" mnemonicParsing="false" onAction="#stopStreamButtonPress" prefHeight="60.0" prefWidth="160.0" text="Stop Recording">
+                  <font>
+                      <Font size="15.0" />
+                  </font>
+              </Button>
+            <VBox>
+               <children>
+                    <Label text="Connection Status:">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+                    <Label text="Recording Status:">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+                    <Label text="Arm Status:">
+                        <font>
+                            <Font name="System Bold" size="12.0" />
+                        </font>
+                    </Label>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                    <Label fx:id="connectionStatus" text="Disconnected" textFill="RED" />
+                  <Label fx:id="streamStatus" minWidth="78.0" text="Not Recording" textFill="RED" />
+                    <Label fx:id="armStatus" text="Disarmed" textFill="RED" />
+               </children>
+            </VBox>
+              <Button fx:id="armButton" disable="true" mnemonicParsing="false" onAction="#armButtonPress" prefHeight="60.0" prefWidth="160.0" text="Arm">
+                  <font>
+                      <Font size="15.0" />
+                  </font>
+              </Button>
+              <Button fx:id="disarmButton" disable="true" mnemonicParsing="false" onAction="#disarmButtonPress" prefHeight="60.0" prefWidth="160.0" text="Disarm">
+                  <font>
+                      <Font size="15.0" />
+                  </font>
+              </Button>
+              <Button fx:id="ignitionButton" disable="true" mnemonicParsing="false" onAction="#ignitionButtonPress" prefHeight="60.0" prefWidth="160.0" text="Ignition">
+                  <font>
+                      <Font size="15.0" />
+                  </font>
+              </Button>
+         </children>
+      </HBox>
+      <AnchorPane>
+         <children>
+              <Button fx:id="hideLogButton" mnemonicParsing="false" onAction="#hideLog" text="Hide Log" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="10.0" />
+                    <Label fx:id="logLabel" layoutX="64.0" text="Output log" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="14.0">
+                  <font>
+                      <Font name="System Bold" size="12.0" />
+                  </font>
+              </Label>
+              <TextArea fx:id="logTextArea" editable="false" minHeight="-Infinity" minWidth="-Infinity" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

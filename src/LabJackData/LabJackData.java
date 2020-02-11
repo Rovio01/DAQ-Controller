@@ -35,6 +35,7 @@ public class LabJackData extends Application {
 		primaryStage.setTitle("Data Acquisition Device Monitor");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		controller.initialize();
 	}
 
 	@Override
