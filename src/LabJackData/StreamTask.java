@@ -20,7 +20,7 @@ public class StreamTask extends Task<Void> {
 	private double scanRate = 10000;
 	private int numAddresses;
 	private int[] aScanList;
-	private String[] aScanListNames = {"AIN0", "AIN8", "AIN9"};
+	private String[] aScanListNames = {"AIN4", "AIN8", "AIN9"};
 	private Controller controller;
 
 	private CSVWriter writer;
@@ -120,9 +120,9 @@ public class StreamTask extends Task<Void> {
 					double vIn=aData[line * numAddresses + item];
 					double converted=0;
 					switch (item) {
-						case 0: converted = (vIn-0)*1; break;
-						case 1: converted = (vIn-0)*1; break;
-						case 2: converted = (vIn-0)*1; break;
+						case 0: converted = ((vIn-0.4124)*200/201*2204.62)-8.7845; break;
+						case 1: converted = (vIn-0)*1200; break;
+						case 2: converted = (vIn-0)*1200; break;
 					}
 					dataLine.add("" + converted);
 					dataSlice[item + 1] = converted;
