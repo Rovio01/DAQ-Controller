@@ -42,6 +42,7 @@ public class LabJackData extends Application {
 	public void stop() {
 		System.out.println("Shutting down...");
 		stopStream();
+		LJM.close(handle);
 	}
 
 	private boolean initializeDAQ() {
