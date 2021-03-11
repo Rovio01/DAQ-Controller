@@ -6,17 +6,15 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Controller {
 	@FXML
 	public LineChart<Number,Number> lineChart;
 	@FXML
-	private Button armButton, disarmButton, ignitionButton, hideLogButton, startStreamButton, stopStreamButton;
+	private Button armButton, disarmButton, ignitionButton1, ignitionButton2, hideLogButton, startStreamButton, stopStreamButton;
 	@FXML
 	private Label connectionStatus, armStatus, streamStatus, loadCellData, pt1Data, pt2Data;
 	@FXML
@@ -58,7 +56,8 @@ public class Controller {
 			if (armButton.isDisabled()) {
 				disarmButton.setDisable(true);
 				armButton.setDisable(true);
-				ignitionButton.setDisable(true);
+				ignitionButton1.setDisable(true);
+				ignitionButton2.setDisable(true);
 				armStatus.setText("Disarmed");
 				armStatus.setTextFill(red);
 				updateLog("Disarming to prevent accidental ignition while not collecting data.");
@@ -77,7 +76,8 @@ public class Controller {
 				updateLog("Arming...");
 				armButton.setDisable(true);
 				disarmButton.setDisable(false);
-				ignitionButton.setDisable(false);
+				ignitionButton1.setDisable(false);
+				ignitionButton2.setDisable(false);
 				armStatus.setText("Armed");
 				armStatus.setTextFill(green);
 			} else {
@@ -92,17 +92,27 @@ public class Controller {
 		updateLog("Disarming...");
 		disarmButton.setDisable(true);
 		armButton.setDisable(false);
-		ignitionButton.setDisable(true);
+		ignitionButton1.setDisable(true);
+		ignitionButton2.setDisable(true);
 		armStatus.setText("Disarmed");
 		armStatus.setTextFill(red);
 	}
 
-	public void ignitionButtonPress() {
+	public void ignitionButton1Press() {
 		// Fetch the result of the users input and react appropriately
 		disarmButton.setDisable(true);
-		updateLog("Igniting");
-		ignitionButton.setDisable(true);
-		app.ignite();
+		updateLog("Igniting channel 1");
+		ignitionButton1.setDisable(true);
+		ignitionButton2.setDisable(true);
+		app.ignite_1();
+	}
+	public void ignitionButton2Press() {
+		// Fetch the result of the users input and react appropriately
+		disarmButton.setDisable(true);
+		updateLog("Igniting channel 2");
+		ignitionButton1.setDisable(true);
+		ignitionButton2.setDisable(true);
+		app.ignite_2();
 	}
 
 	public void hideLog() {
@@ -151,7 +161,8 @@ public class Controller {
 		updateLog("Disarming...");
 		disarmButton.setDisable(true);
 		armButton.setDisable(false);
-		ignitionButton.setDisable(true);
+		ignitionButton1.setDisable(true);
+		ignitionButton2.setDisable(true);
 		armStatus.setText("Disarmed");
 		armStatus.setTextFill(Color.web("#FF0000"));
 	}

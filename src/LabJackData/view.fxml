@@ -10,7 +10,7 @@
    <children>
       <HBox spacing="5.0">
          <children>
-              <LineChart fx:id="lineChart" animated="false" createSymbols="false" maxHeight="800.0" prefHeight="400.0" prefWidth="890.0">
+              <LineChart fx:id="lineChart" animated="false" createSymbols="false" maxHeight="960.0" prefHeight="400.0" prefWidth="1050.0">
                   <xAxis>
                       <NumberAxis forceZeroInRange="false" label="Time (s)" side="BOTTOM" />
                   </xAxis>
@@ -81,11 +81,16 @@
                       <Font size="15.0" />
                   </font>
               </Button>
-              <Button fx:id="ignitionButton" disable="true" mnemonicParsing="false" onAction="#ignitionButtonPress" prefHeight="60.0" prefWidth="160.0" text="Ignition">
+              <Button fx:id="ignitionButton1" disable="true" mnemonicParsing="false" onAction="#ignitionButton1Press" prefHeight="60.0" prefWidth="160.0" text="Ignition 1">
                   <font>
                       <Font size="15.0" />
                   </font>
               </Button>
+             <Button fx:id="ignitionButton2" disable="true" mnemonicParsing="false" onAction="#ignitionButton2Press" prefHeight="60.0" prefWidth="160.0" text="Ignition 2">
+                 <font>
+                     <Font size="15.0" />
+                 </font>
+             </Button>
          </children>
       </HBox>
       <AnchorPane>

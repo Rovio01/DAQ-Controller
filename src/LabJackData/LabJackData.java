@@ -67,8 +67,13 @@ public class LabJackData extends Application {
 		streaming = false;
 	}
 
-	void ignite() {
-		IgniterTask igniter = new IgniterTask(handle, controller);
+	void ignite_1() {
+		IgniterTask igniter = new IgniterTask(handle, controller,2015);
+		new Thread(igniter).start();
+	}
+
+	void ignite_2() {
+		IgniterTask igniter = new IgniterTask(handle, controller,2014);
 		new Thread(igniter).start();
 	}
 }

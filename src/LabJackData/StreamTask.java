@@ -20,7 +20,7 @@ public class StreamTask extends Task<Void> {
 	private double scanRate = 10000;
 	private int numAddresses;
 	private int[] aScanList;
-	private String[] aScanListNames = {"AIN4", "AIN8", "AIN9"};
+	private String[] aScanListNames = {"AIN10", "AIN8", "AIN9"};
 	private Controller controller;
 
 	private CSVWriter writer;
